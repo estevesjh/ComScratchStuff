@@ -5,9 +5,10 @@
 
 # after talking with Merlin I updated the query_main_pointing_info function
 # the main changes are: 
-# 1 - dRA, dDEC and PNT_OFFSET are computed by from lsst.rapid.analysis.utils import getExpPositionOffset
-# 2 - the metadata columns now have a sufix `_MD` 
-# 3 - some additional information comes from the exposure info, airmass, rotation angle, ...
+# 1 - RA, DEC are from the boresight
+# 2 - dRA, dDEC and PNT_OFFSET are computed by from lsst.rapid.analysis.utils import getExpPositionOffset
+# 3 - the metadata columns now have a sufix `_MD` 
+# 4 - some additional information comes from the exposure info, airmass, rotation angle, ...
 
 
 import numpy as np
@@ -80,7 +81,6 @@ def query_main_pointing_info(expId):
     info['dDEC'] = dDec
     info['dAZ'] = dAz
     info['dEL'] = dEl
-    
     info['PNT_OFFSET'] = angular_offset
     return info
 
