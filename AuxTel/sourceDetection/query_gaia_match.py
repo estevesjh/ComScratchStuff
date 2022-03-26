@@ -13,10 +13,10 @@ def header():
 repo = '/repo/main/butler.yaml'
 instrument = 'LATISS'
 # collection = 'u/mfl/testProcessCcd'
-# collection = 'u/mfl/testProcessCcd_srcMatchFull_181e6356'
-collection = 'u/edennihy/tickets/CAP-868_20220321a'
+collection = 'u/mfl/testProcessCcd_srcMatchFull_181e6356'
+# collection = 'u/edennihy/tickets/CAP-868_20220321a'
 # collection = 'u/edennihy/tickets/CAP-851'
-rapid_butler = False
+rapid_butler = True
 
 if rapid_butler:
     import lsst.rapid.analysis.butlerUtils as bu
@@ -64,11 +64,12 @@ for expId in expIds:
         print('2 - Gaia Finding')
         tab = query_gaia_data(wcsButler, border = 10, mag_limit=18, row_limit=-1, is_butler=True)
 
-        print('3 - Ploting results')
-        ploting_field(tab, scr, exp, expId, x0=x0, y0=y0, path='./figures')
+        #print('3 - Ploting results')
+        #ploting_field(tab, scr, exp, expId, x0=x0, y0=y0, path='./figures')
 
         print('4 - Sky Match Sources And Save Results')
         new = sky_match_tables(tab, scr, wcsButler, radius=1.2, is_butler=True)
+        new['EXPID'] = expId
         new['DATE'] = str(mData['DATE'])
         new['FILTER'] = mData['FILTER']
         new['EXPTIME'] = mData['EXPTIME']

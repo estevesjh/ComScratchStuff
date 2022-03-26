@@ -125,8 +125,6 @@ def joining_tables(ref_table, table, id0, id1):
                           'base_CircularApertureFlux_3_0_instFlux', 'base_CircularApertureFlux_3_0_instFluxErr',
                           'gaia'])
     
-    sources.sort('base_CircularApertureFlux_3_0_instFlux', reverse=True)
-    
     ref_table['id_match'] = -1
     sources['id_match'] = -2
     
@@ -165,7 +163,7 @@ def sky_match_tables(ref_table, table, wcs_auxtel, radius=1.2, is_butler=False):
     
     id0 = matches['i1']
     id1 = matches['i2']
-    ref_table['dist'] = -1
+    ref_table['dist'] = -1.
     table['gaia'] = False
     ref_table['auxtel'] = False
     
@@ -233,7 +231,7 @@ def ploting_field(tab, scr, exposure, expId,path='.', x0=2000.0, y0=2000.0):
     image_array -= low_limit
     #vmin, vmax = get_lims(image_array.flatten())
     
-    mask = scr['base_CircularApertureFlux_3_0_instFlux']/scr['base_CircularApertureFlux_3_0_instFluxErr'] > 50
+    # mask = scr['base_CircularApertureFlux_3_0_instFlux']/scr['base_CircularApertureFlux_3_0_instFluxErr'] > 50
     
     #x0, y0 = wcs_header['CRPIX1'], wcs_header['CRPIX2']
 
@@ -249,7 +247,7 @@ def ploting_field(tab, scr, exposure, expId,path='.', x0=2000.0, y0=2000.0):
     ax.scatter(tab['ref_base_SdssCentroid_x'],tab['ref_base_SdssCentroid_y']\
                 ,facecolors='none', edgecolors='g', s=200, lw=2, label='Gaia Sources [< 28 mag]')
 
-    ax.scatter(scr['base_SdssCentroid_x'][mask],scr['base_SdssCentroid_y'][mask]\
+    ax.scatter(scr['base_SdssCentroid_x'],scr['base_SdssCentroid_y']\
                 ,color='b', marker='x',label='DM Sources')
 
     ax.scatter(x0, y0,color='r',s=300,marker='x',label='AuxTel WCS Position')
@@ -260,7 +258,7 @@ def ploting_field(tab, scr, exposure, expId,path='.', x0=2000.0, y0=2000.0):
     ax.set_title(f'Field: {expId}',fontsize=16)
     plt.show()
     fig.tight_layout()
-    fig.savefig(f'{path}/gaia_{expId}.png', facecolor='w',transparent=False, dpi=75)
+    fig.savefig(f'{path}/gaia_{expId}.png', facecolor='w',transparent=False, dpi=50)
     plt.clf()
     print(f'saved file: {path}/gaia_{expId}.png')
 

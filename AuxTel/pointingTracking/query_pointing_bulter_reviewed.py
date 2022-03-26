@@ -16,9 +16,6 @@ import pandas as pd
 from datetime import date
 from lsst.rapid.analysis.utils import getExpPositionOffset
 
-mylist = ['RA','DEC','EXPTIME','TEMP_SET','CCDTEMP','FILTER',
-          'ELSTART','ELEND','AZSTART','AZEND','ELSTART']
-
 def getSkyOriginValues(wcsInfo):
     ra = wcsInfo.getSkyOrigin().getRa().asDegrees()
     dec = wcsInfo.getSkyOrigin().getDec().asDegrees()
@@ -92,7 +89,9 @@ mylist = ['RA','DEC','EXPTIME','TEMP_SET','CCDTEMP','FILTER',
 repo = '/repo/main/butler.yaml'
 instrument = 'LATISS'
 # collection = 'u/mfl/testProcessCcd'
-collection = 'u/mfl/testProcessCcd_srcMatchFull_181e6356'
+# collection = 'u/mfl/testProcessCcd_srcMatchFull_181e6356'
+# collection = 'u/edennihy/tickets/CAP-868_20220321a'
+collection = 'u/edennihy/tickets/CAP-851'
 
 print('\n')
 print('Querying WCS Poiting')
@@ -101,6 +100,10 @@ print(f'collection: {collection} \n')
 
 import lsst.rapid.analysis.butlerUtils as bu
 butler = bu.makeDefaultLatissButler('NCSA', extraCollections=[collection])
+registry=butler.registry
+
+import lsst.daf.butler as dafButler #Gen3 butler
+butler = dafButler.Butler(repo, collections=[collection])
 registry=butler.registry
 
 # querying all exposure ids in this collection
@@ -123,6 +126,8 @@ for expId in expIds:
 
 # saving output as pandas dataframe
 df = pd.DataFrame(tables, index=np.array(expIds))
+
 date = date.today().strftime("%d%m%Y")
-df.to_csv(f'data/rev_checking_auxtel_pointing_{date}.csv')
-print(f'Saved file: data/rev_checking_auxtel_pointing_{date}.csv')
+print(f'Date: {date}')
+df.to_csv(f'data/2022_feb.csv')
+print(f'Saved file: data/2022_feb.csv')
