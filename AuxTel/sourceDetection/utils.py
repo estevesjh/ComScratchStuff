@@ -53,9 +53,9 @@ def sample_vec(x):
 def plot_curve(x, y, percentiles=[16,84],ax=None,color=None,**args):
     if ax is None: ax = plt.axes()
     
-    ylow = np.percentile(y,percentiles[0],axis=1)
-    yhig = np.percentile(y,percentiles[1],axis=1)
-    ymean = np.median(y,axis=1)
+    ylow = np.nanpercentile(y,percentiles[0],axis=1)
+    yhig = np.nanpercentile(y,percentiles[1],axis=1)
+    ymean = np.nanmedian(y,axis=1)
     
     p = ax.plot(x,ymean,color=color,**args)
     ax.fill_between(x,ylow,yhig,color=p[0].get_color(),alpha=0.3)
