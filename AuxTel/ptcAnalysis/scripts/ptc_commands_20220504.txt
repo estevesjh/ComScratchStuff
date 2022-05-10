@@ -4,28 +4,28 @@
 # The bias don't need to have the same filter
 # The Darks don't need to have the same exposure time
 
-obsDate=20220405
-bias0=$(printf "%05d" 40)
-bias1=$(printf "%05d" 60)
+obsDate=20220504
+bias0=$(printf "%05d" 50)
+bias1=$(printf "%05d" 70)
 
-dark0=$(printf "%05d" 61)
-dark1=$(printf "%05d" 70)
+dark0=$(printf "%05d" 94)
+dark1=$(printf "%05d" 113)
 
 # darks for bright defects
-defect0=$(printf "%05d" 65)
-defect1=$(printf "%05d" 68)
+defect0=$(printf "%05d" 100)
+defect1=$(printf "%05d" 102)
 
 # flats for dark defects
-defect2=$(printf "%05d" 75)
-defect3=$(printf "%05d" 78)
+defect2=$(printf "%05d" 115)
+defect3=$(printf "%05d" 117)
 
 # sef of flats w/ same exposure (SDSSr)
-flat0=$(printf "%05d" 81)
-flat1=$(printf "%05d" 90)
+flat0=$(printf "%05d" 114)
+flat1=$(printf "%05d" 133)
 
 # sef of flats w/ increasing exposure to the PTC curve (SDSSr)
-flat_ptc0=$(printf "%05d" 91)
-flat_ptc1=$(printf "%05d" 170)
+flat_ptc0=$(printf "%05d" 134)
+flat_ptc1=$(printf "%05d" 173)
 
 pipetask run -j 8 -d "detector IN (0) AND exposure IN (${obsDate}${bias0}..${obsDate}${bias1}) \
 	 AND instrument='LATISS' " \
@@ -103,36 +103,26 @@ butler collection-chain /repo/main --mode=extend \
        u/jesteves/calib/latiss/flat_${obsDate} 
 
 # Run the PTC: 
-
 pipetask run -j 32 -d "detector IN (0) AND instrument='LATISS' AND \
 	 exposure IN (${obsDate}${flat_ptc0}..${obsDate}${flat_ptc1}) AND exposure.observation_type='flat'" \
 	 -b /repo/main \
-	 -i LATISS/raw/all,LATISS/calib,LATISS/calib,u/jesteves/calib/latiss/calib.${obsDate} \
+     -i LATISS/raw/all,LATISS/calib,LATISS/calib,u/jesteves/calib/latiss/calib.${obsDate} \
 	 -o u/jesteves/latiss/ptc_${obsDate} \
-	 -p /home/jesteves/jhome/AuxTel/scripts/measurePhotonTransferCurve.yaml \
-	 --register-dataset-types
-
-
-# another set of flat fields
-pipetask run -j 32 -d "detector IN (0) AND instrument='LATISS' AND \
-	 exposure IN (2022040500091..2022040500170) AND exposure.observation_type='flat'" \
-	 -b /repo/main \
-     -c isr:doFlat=False \
-	 -i LATISS/raw/all,LATISS/calib,LATISS/calib,u/jesteves/calib/latiss/calib.${obsDate} \
-	 -o u/jesteves/latiss/ptc_20220405_flat \
 	 -p $CP_PIPE_DIR/pipelines/Latiss/cpPtc.yaml \
 	 --register-dataset-types
+
+# -p /home/jesteves/jhome/AuxTel/scripts/measurePhotonTransferCurve.yaml \
 
 Plot the PTC:
 
 # ./AuxTel/scripts/
 
 plotPhotonTransferCurve.py \
-/repo/main/u/jesteves/latiss/ptc_20211104_rerun/20220209T151152Z/ptc/ptc_LATISS_RXX_S00_u_jesteves_latiss_ptc_20211104_rerun_20220209T151152Z.fits \
+/repo/main/u/jesteves/latiss/ptc_20220504/20220505T010950Z/ptc/ptc_LATISS_RXX_S00_u_jesteves_latiss_ptc_20220504_20220505T010950Z.fits \
 --detNum=0 --outDir=./
 
 plotPhotonTransferCurve.py /repo/main/u/jesteves/latiss/ptc_20220405/20220408T211458Z/ptc/ptc_LATISS_RXX_S00_u_jesteves_latiss_ptc_20220405_20220408T211458Z.fits --detNum=0 --outDir=./
 
-
-obsDate=20220405
+## look for exposures
+obsDate=20220504
 butler query-dimension-records /repo/main exposure --where "instrument='LATISS' AND exposure.observation_type='flat' AND exposure.day_obs > $((obsDate-1)) AND exposure.day_obs <$((obsDate+1))"
