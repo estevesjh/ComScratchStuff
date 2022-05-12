@@ -131,18 +131,21 @@ def query_main_pointing_info(expId):
     info['PNT_OFFSET'] = angular_offset
     return info
 
+nCores = 10
 # metada columns it would be stored
 mylist = ['RA','DEC','EXPTIME','TEMP_SET','CCDTEMP','FILTER',
           'ELSTART','ELEND','AZSTART','AZEND','ELSTART']
 
 # initializating the butler repo
 repo = '/repo/main/butler.yaml'
+repo_2 = '/project/edennihy/auxtelImagingSurveys/data/'
 instrument = 'LATISS'
 # collection = 'u/mfl/testProcessCcd'
 # collection = 'u/mfl/testProcessCcd_srcMatchFull_181e6356'
 # collection = 'u/edennihy/tickets/CAP-868_20220321a'
 # collection = 'u/edennihy/tickets/CAP-851'
-collection = 'u/edennihy/tickets/SITCOM-266_20220419'
+# collection = 'u/edennihy/tickets/SITCOM-266_20220419'
+collection = 'u/edennihy/CAP-886_partial'
 
 print('\n')
 print('Querying WCS Poiting')
@@ -154,7 +157,7 @@ print(f'collection: {collection} \n')
 # registry=butler.registry
 
 import lsst.daf.butler as dafButler #Gen3 butler
-butler = dafButler.Butler(repo, collections=[collection])
+butler = dafButler.Butler(repo_2, collections=[collection])
 registry=butler.registry
 
 # querying all exposure ids in this collection
@@ -169,16 +172,19 @@ print('\nStarting Query')
 print(f'Number of exposures: {len(expIds)}')
 
 # querying the wcs poiting and the metadata info
-tables = []
-for expId in expIds:
-    print(f'exposure: {expId}')
-    tables.append(query_main_pointing_info(expId))
-    print('\n')
+# tables = []
+# for expId in expIds:
+#     print(f'exposure: {expId}')
+#     tables.append(query_main_pointing_info(expId))
+#     print('\n')
 
+from joblib import Parallel, delayed
+tables = Parallel(n_jobs=nCores)(delayed(query_main_pointing_info)(expId) for expId in expIds)
+                   
 # saving output as pandas dataframe
 df = pd.DataFrame(tables, index=np.array(expIds))
 
 date = date.today().strftime("%d%m%Y")
 print(f'Date: {date}')
-df.to_csv(f'data/2022_Apr.csv')
-print(f'Saved file: data/2022_Apr.csv')
+df.to_csv(f'data/2022_May_partial03.csv')
+print(f'Saved file: data/2022_May_partial03.csv')
