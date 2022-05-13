@@ -19,11 +19,11 @@ defect1=$(printf "%05d" 102)
 defect2=$(printf "%05d" 115)
 defect3=$(printf "%05d" 117)
 
-# sef of flats w/ same exposure (SDSSr)
+# sef of flats w/ same exposure (SDSSi)
 flat0=$(printf "%05d" 114)
 flat1=$(printf "%05d" 133)
 
-# sef of flats w/ increasing exposure to the PTC curve (SDSSr)
+# sef of flats w/ increasing exposure to the PTC curve (SDSSi)
 flat_ptc0=$(printf "%05d" 134)
 flat_ptc1=$(printf "%05d" 173)
 
@@ -106,8 +106,9 @@ butler collection-chain /repo/main --mode=extend \
 pipetask run -j 32 -d "detector IN (0) AND instrument='LATISS' AND \
 	 exposure IN (${obsDate}${flat_ptc0}..${obsDate}${flat_ptc1}) AND exposure.observation_type='flat'" \
 	 -b /repo/main \
+     -c isr:doFlat=False \
      -i LATISS/raw/all,LATISS/calib,LATISS/calib,u/jesteves/calib/latiss/calib.${obsDate} \
-	 -o u/jesteves/latiss/ptc_${obsDate} \
+	 -o u/jesteves/latiss/ptc_${obsDate}_flat_rerun \
 	 -p $CP_PIPE_DIR/pipelines/Latiss/cpPtc.yaml \
 	 --register-dataset-types
 
