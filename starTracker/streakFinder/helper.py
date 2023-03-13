@@ -9,7 +9,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib
 matplotlib.rcParams["image.interpolation"] = 'nearest'
 
-def display(imArr, nStd = 5, gSig = 7, ax=None):
+def display(imArr, nStd = 5, gSig = 7, ax=None, fig=None):
     if ax is None:
         fig, ax = plt.subplots(1,1, figsize=(12,12))
     imArrClip, low, high = sigmaclip(imArr)
@@ -18,9 +18,7 @@ def display(imArr, nStd = 5, gSig = 7, ax=None):
     im = ax.imshow(imArr, vmin=mean-nStd*std, vmax=mean+nStd*std, cmap='gray', origin='lower')
     divider = make_axes_locatable(ax)
     cax = divider.append_axes('right', size='5%', pad=0.05)
-    plt.colorbar(im, cax=cax, orientation='vertical')
-    plt.show()
-    cax.cla()
+    fig.colorbar(im, cax=cax, orientation='vertical')
 
 def read_image(filename):
     with fits.open(filename) as hdu:
