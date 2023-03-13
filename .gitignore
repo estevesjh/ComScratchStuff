@@ -1,0 +1,179 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# fits files
+.fits
+starTracker/streakFinder/coadds/*.fits
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+#lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+docs/_static
+docs/_templates
+docs/make.bat
+docs/Makefile
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+.DS_Store
+
+# checkpoints
+*.ipynb_checkpoints/
+
+# /galpro/model_2d/
+# /galpro/model_1d/
+# /galpro/model_nd/
+# /galpro/test.py
+# /.idea
+
+# /examples/galpro_live_demo_1d.ipynb
+# /examples/galpro_live_demo_2d.ipynb
+# /examples/galpro_live_demo_nd.ipynb
+# /examples/galpro_demo_cosmos_aper3.ipynb
+# /examples/galpro_demo_deep.ipynb
+# /examples/galpro_demo_balrog.ipynb
+# /examples/galpro_demo_cosmos_total.ipynb
+
+# /examples/galpro
+# /galpro/galpro
+
+# examples/data/x_test_deep.npy
+# examples/data/x_train_deep.npy
+# examples/data/y_test_deep.npy
+# examples/data/y_train_deep.npy
+# examples/data/x_test_balrog.npy
+# examples/data/x_train_balrog.npy
+# examples/data/y_test_balrog.npy
+# examples/data/y_train_balrog.npy
+# examples/data/x_test_cosmos_aper3.npy
+# examples/data/x_train_cosmos_aper3.npy
+# examples/data/y_test_cosmos_aper3.npy
+# examples/data/y_train_cosmos_aper3.npy
+# examples/data/x_test_cosmos_total.npy
+# examples/data/x_train_cosmos_total.npy
+# examples/data/y_test_cosmos_total.npy
+# examples/data/y_train_cosmos_total.npy
+# examples/my_env/
+
+

@@ -1,0 +1,13 @@
+import pandas as pd
+
+df = pd.read_json('startracker-wide_2023-03-08.json').T
+df = df.dropna()
+
+times = df[['UTC','UTC wide']]
+df = df.drop(columns=['UTC','UTC wide'])
+# make sure all datatypes are float
+df = df.astype(float)
+
+timenew = (today+' '+ times['UTC'].to_numpy()).astype(np.datetime64)
+df['UTC'] = pd.Series(timenew)
+df['seq'] = df.index
