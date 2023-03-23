@@ -34,28 +34,29 @@ def get_groups(df):
     
     counter = 0
     for i in range(diffRa.size):
-        if  (dPnt[i]>1/60): counter += 1    
+        if  (dPnt[i]>60/3600): counter += 1    
         groups[i+1] = counter
 
     df['groups'] = groups
     print('Number of Groups: %i'%np.unique(groups).size)
     return df
 
-def get_snakes(data, nsnakes):
-    """Find Snakes
+def get_snakes(data):
+    """ Find Snakes
+    
+    The snakes are circles with 3.5deg radii
+    Select the ones with Angular difference higher than 7deg. 
+    The Angular difference is Euclidean, for this reason ang_offset needs to be larger than 3.5
     """
-    from scipy.cluster.vq import whiten, kmeans, vq, kmeans2
-    pos = np.vstack([data['Ra'].to_numpy(),data['Dec'].to_numpy(), data['seq_num'].to_numpy()]).T
-
-    # get cluster centers
-    centroids, mean_value = kmeans(pos, nsnakes)
-    ix = np.argsort(centroids[:,0])
-
-    # mapping the centroids
-    clusters, distances = vq(pos, centroids[ix,:])
-
-    # saving snakes to the dataframe
-    data['snakes'] = clusters
+    ang_offset = 7. # carefully choosen based on the datasets in hand
+    
+    pnt = np.hypot(data['Calculated Ra wide'].diff(), data['Calculated Dec wide'].diff()).to_numpy()
+    sids = np.append(np.array([0]),np.where(pnt>ang_offset)[0])
+    counts = np.diff(sids)
+    snakes = np.zeros_like(data['groups'].to_numpy())
+    for i in range(len(sids)-1):
+        snakes[sids[i]:sids[i]+counts[i]] = i
+    data['snakes'] = snakes
     return data
 
 def get_residual(ycol, df, keys):
@@ -96,7 +97,7 @@ def filter_sequences(df, sequences):
 
 def filter_groups(data):
     gids, _, counts = np.unique(data['groups'].to_numpy(), return_index=True, return_counts=True)
-    is_group = counts<=4
+    is_group = counts<=5
     ngroups = np.count_nonzero(is_group)
     # filter
     mask = np.in1d(data['groups'].to_numpy(), gids[is_group])
