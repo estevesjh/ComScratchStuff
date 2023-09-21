@@ -1,0 +1,13 @@
+ 
+Start the build calibration scripts: PTC ON
+ 
+Set Variables
+Starting DM Code
+Observation date is: 20220922
+ 
+Creating Master Bias
+pipetask run -j 8 -d detector IN (0) AND exposure IN (2022092200032..2022092200051) AND instrument='LATISS'
+Ingest Bias Calibs
+butler certify-calibrations /sdf/group/rubin/repo/oga u/sdf/esteves/latiss/bias_20220922        u/sdf/esteves/calib/latiss/bias_20220922 --begin-date 1980-01-01        --end-date 2050-01-01 bias
+
+Creating Master Dark

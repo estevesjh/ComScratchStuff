@@ -105,46 +105,47 @@ def query_main_pointing_info(expId, expIdend=0):
     day_obs = int(str(expId)[-13:][:8]) # robust query day because of a 9 in the front
     dataId = {"instrument": instrument, "exposure.day_obs": day_obs, "visit": expId, "detector": 0}
     
-    # try:
-    raw = butler.get('raw', dataId)
-    fitted = butler.get('calexp', dataId)
-    offset = getExpPositionOffset(raw, fitted)
+    try:
+        raw = butler.get('raw', dataId)
+        fitted = butler.get('calexp', dataId)
+        offset = getExpPositionOffset(raw, fitted)
 
-    # get offset
-    dRa = offset.deltaRa.asArcminutes()
-    dDec = offset.deltaDec.asArcminutes()
-    dAz = offset.deltaAz.asArcminutes()
-    dEl = offset.deltaAlt.asArcminutes()
-    angular_offset = offset.angular_offset_arcsec/60. # arcminutes
+        # get offset
+        dRa = offset.deltaRa.asArcminutes()
+        dDec = offset.deltaDec.asArcminutes()
+        dAz = offset.deltaAz.asArcminutes()
+        dEl = offset.deltaAlt.asArcminutes()
+        angular_offset = offset.angular_offset_arcsec/60. # arcminutes
 
-    # get pointing
-    wcsFitted = fitted.getWcs()
-    ra, dec = getSkyOriginValues(wcsFitted)
+        # get pointing
+        wcsFitted = fitted.getWcs()
+        ra, dec = getSkyOriginValues(wcsFitted)
 
-    # get metadata
-    mData = raw.getMetadata().toDict()#butler.get('raw.metadata', dataId).toDict()
+        # get metadata
+        mData = raw.getMetadata().toDict()#butler.get('raw.metadata', dataId).toDict()
 
-    # querying some basic info about the exposure
-    info = get_exposure_info(raw)
+        # querying some basic info about the exposure
+        info = get_exposure_info(raw)
 
-    for col in mylist:
-        info[col+'_MD'] = mData[col] 
+        for col in mylist:
+            info[col+'_MD'] = mData[col] 
 
-    info['RA_WCS'] = ra
-    info['DEC_WCS'] = dec
-    info['dRA'] = dRa
-    info['dDEC'] = dDec
-    info['dAZ'] = dAz
-    info['dEL'] = dEl
-    info['PNT_OFFSET'] = angular_offset
-    print(f'Completed {expId}/{expIdend}')
-    # except:
-    #     print('Failed to run %i'%expId)
-    #     info = nan_dict
+        info['RA_WCS'] = ra
+        info['DEC_WCS'] = dec
+        info['dRA'] = dRa
+        info['dDEC'] = dDec
+        info['dAZ'] = dAz
+        info['dEL'] = dEl
+        info['PNT_OFFSET'] = angular_offset
+        print(f'Completed {expId}/{expIdend}')
+    except:
+        print('Failed to run %i'%expId)
+        info = nan_dict
     df = pd.DataFrame(info, index=np.array([expId]))
     df.to_csv(f'data/tmp/checking_auxtel_pointing_{TAG}_{expId}.csv')
 
-TAG = 'Oct2022'
+# TAG = 'Oct2022'
+TAG = 'Dec2022'
 nCores = 10
 # metada columns it would be stored
 mylist = ['RA','DEC','EXPTIME','TEMP_SET','CCDTEMP','FILTER']
@@ -154,6 +155,7 @@ repo = '/repo/main/butler.yaml'
 repo_2 = '/project/edennihy/auxtelImagingSurveys/data/'
 repo_3 = '/sdf/group/rubin'+repo
 repo_4 = '/sdf/group/rubin/repo/oga/butler.yaml'
+repo_4 = '/sdf/group/rubin/repo/embargo/butler.yaml'
 
 instrument = 'LATISS'
 # collection = 'u/mfl/testProcessCcd'
@@ -163,7 +165,8 @@ instrument = 'LATISS'
 # collection = 'u/edennihy/tickets/SITCOM-266_20220419'
 # collection = 'u/edennihy/CAP-886_partial'
 # collection = 'u/edennihy/tickets/SITCOM-306_piff' # May 2022
-collection = 'u/edennihy/tickets/SITCOM-484' # Oct 2022
+# collection = 'u/edennihy/tickets/SITCOM-484' # Oct 2022
+collection = 'u/edennihy/2022-12-12/AT_Pointing' # Dec 2022
 
 print('\n')
 print('Querying WCS Poiting')
